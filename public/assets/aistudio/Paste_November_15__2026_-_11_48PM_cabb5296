@@ -1,0 +1,1292 @@
+MASTER PROJECT DEVELOPMENT PROMPT
+
+BUILD A COMPLETE PRODUCTION-READY SMM PANEL FROM SCRATCH
+
+You must build a complete, real-world, production-ready SMM Panel website from scratch.
+
+This is a strict technical project specification. Follow every instruction carefully. Do not skip requirements, simplify functionality, change the architecture, or introduce unrequested technologies.
+
+The project must be a traditional PHP/MySQL website, not an app, applet, frontend demo, prototype or SaaS starter template.
+
+==================================================
+
+1. PROJECT IDENTITY AND OBJECTIVE
+    ==================================================
+
+Project: Professional SMM Panel
+
+Build a complete commercial SMM Panel with:
+
+* Public Landing Website.
+* User Registration and Login.
+* User Dashboard.
+* Admin Dashboard.
+* Staff Admin Management.
+* Service and Category Management.
+* Multiple Provider API Integration.
+* Automatic Order Processing.
+* Wallet and Transaction System.
+* Razorpay Payment Gateway.
+* Manual Payment Gateway.
+* Support Ticket System.
+* Notifications.
+* Reports and Analytics.
+* Website Settings.
+* Theme Management.
+* Secure Web Installer.
+* cPanel Hosting Compatibility.
+
+The website must have actual working backend functionality connected to MySQL.
+
+Do not create a visual-only dashboard.
+
+==================================================
+2. ABSOLUTE TECHNOLOGY RESTRICTIONS
+
+ONLY USE:
+
+Backend:
+
+* Core PHP.
+* MySQL.
+* PHP PDO.
+* PHP Sessions.
+* PHP cURL.
+
+Frontend:
+
+* HTML5.
+* Tailwind CSS.
+* Alpine.js.
+* Vanilla JavaScript.
+* AJAX / Fetch API.
+* SVG Icons.
+
+STRICTLY PROHIBITED:
+
+* React.
+* Next.js.
+* Vue.
+* Angular.
+* Node.js.
+* Laravel.
+* Symfony.
+* CodeIgniter.
+* WordPress.
+* SQLite.
+* TypeScript.
+* Other PHP or JavaScript frameworks.
+* Composer-based installation requirements.
+* npm-based build requirements.
+
+ZERO .TS / .TSX POLICY
+
+This is a mandatory non-negotiable requirement.
+
+* Never create .ts files.
+* Never create .tsx files.
+* Never use TypeScript.
+* Never install TypeScript dependencies.
+* Never create TypeScript configuration files.
+* If any tool generates .ts or .tsx files accidentally, delete them immediately.
+* Remove all related imports, references, build configurations and dependencies.
+* Scan the entire project recursively before final delivery.
+* Final project must contain ZERO .ts and ZERO .tsx files.
+
+Use PHP, JS, CSS, HTML and SQL files.
+
+Do not use Node.js, npm, Vite or Webpack as a required production build system.
+
+The project must work on standard PHP/MySQL cPanel hosting.
+
+==================================================
+3. STRICT ROOT DIRECTORY STRUCTURE
+
+Create the project directly inside the website root.
+
+Do not create an extra wrapper directory.
+
+CORRECT ROOT:
+
+project/
+├── index.php
+├── login.php
+├── register.php
+├── logout.php
+├── forgot-password.php
+├── reset-password.php
+├── .htaccess
+├── robots.txt
+├── sitemap.xml
+│
+├── admin/
+├── user/
+├── api/
+├── themes/
+├── config/
+├── core/
+├── includes/
+├── modules/
+├── cron/
+├── storage/
+├── database/
+└── install/
+
+STRICTLY DO NOT CREATE:
+
+* app/
+* applet/
+* application/
+* frontend/
+* backend/
+* src/
+* client/
+* server/
+* smmpanel/
+* unnecessary wrapper folders.
+* duplicate project roots.
+
+The root folders must be directly accessible as:
+
+* domain.com/admin/
+* domain.com/user/
+* domain.com/api/
+
+Do not place the website inside another project folder.
+
+==================================================
+4. COMPLETE DETAILED FILE STRUCTURE
+
+Use the following structure. You may add genuinely necessary PHP, JS, CSS or SQL files inside the appropriate existing folders, but do not change the main architecture.
+
+project/
+│
+├── index.php
+├── login.php
+├── register.php
+├── logout.php
+├── forgot-password.php
+├── reset-password.php
+├── .htaccess
+├── robots.txt
+├── sitemap.xml
+│
+├── admin/
+│   ├── index.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── dashboard.php
+│   ├── users.php
+│   ├── user-view.php
+│   ├── user-edit.php
+│   ├── orders.php
+│   ├── order-view.php
+│   ├── categories.php
+│   ├── services.php
+│   ├── providers.php
+│   ├── provider-services.php
+│   ├── payments.php
+│   ├── payment-view.php
+│   ├── transactions.php
+│   ├── tickets.php
+│   ├── ticket-view.php
+│   ├── pages.php
+│   ├── announcements.php
+│   ├── reports.php
+│   ├── logs.php
+│   ├── backups.php
+│   ├── staff.php
+│   ├── roles.php
+│   ├── themes.php
+│   ├── settings.php
+│   └── includes/
+│       ├── header.php
+│       ├── sidebar.php
+│       ├── footer.php
+│       ├── auth.php
+│       └── navigation.php
+│
+├── user/
+│   ├── index.php
+│   ├── dashboard.php
+│   ├── new-order.php
+│   ├── bulk-order.php
+│   ├── services.php
+│   ├── orders.php
+│   ├── order-view.php
+│   ├── add-funds.php
+│   ├── transactions.php
+│   ├── tickets.php
+│   ├── ticket-view.php
+│   ├── notifications.php
+│   ├── profile.php
+│   ├── change-password.php
+│   ├── api-access.php
+│   └── includes/
+│       ├── header.php
+│       ├── navigation.php
+│       ├── footer.php
+│       └── auth.php
+│
+├── api/
+│   ├── index.php
+│   ├── v1/
+│   │   ├── index.php
+│   │   ├── services.php
+│   │   ├── add-order.php
+│   │   ├── order-status.php
+│   │   ├── refill.php
+│   │   └── balance.php
+│   └── callbacks/
+│       └── razorpay.php
+│
+├── themes/
+│   └── classic/
+│       ├── theme.php
+│       ├── config.php
+│       ├── assets/
+│       │   ├── css/
+│       │   │   └── style.css
+│       │   ├── js/
+│       │   │   └── app.js
+│       │   ├── images/
+│       │   └── icons/
+│       └── components/
+│           ├── header.php
+│           ├── footer.php
+│           ├── sidebar.php
+│           ├── bottom-nav.php
+│           ├── alerts.php
+│           └── modals.php
+│
+├── config/
+│   ├── database.php
+│   ├── app.php
+│   ├── constants.php
+│   ├── payment.php
+│   └── security.php
+│
+├── core/
+│   ├── Database.php
+│   ├── Auth.php
+│   ├── Session.php
+│   ├── CSRF.php
+│   ├── Validator.php
+│   ├── Response.php
+│   ├── Theme.php
+│   ├── Wallet.php
+│   ├── Order.php
+│   ├── Payment.php
+│   ├── Provider.php
+│   ├── Permission.php
+│   ├── Notification.php
+│   └── Logger.php
+│
+├── includes/
+│   ├── bootstrap.php
+│   ├── functions.php
+│   ├── helpers.php
+│   ├── permissions.php
+│   ├── notifications.php
+│   ├── mailer.php
+│   └── error-handler.php
+│
+├── modules/
+│   ├── orders/
+│   ├── wallet/
+│   ├── payments/
+│   ├── providers/
+│   ├── tickets/
+│   ├── notifications/
+│   ├── services/
+│   ├── reports/
+│   └── users/
+│
+├── cron/
+│   ├── process-orders.php
+│   ├── sync-orders.php
+│   ├── sync-providers.php
+│   ├── process-refills.php
+│   └── cleanup.php
+│
+├── storage/
+│   ├── logs/
+│   ├── backups/
+│   ├── cache/
+│   ├── uploads/
+│   └── temp/
+│
+├── database/
+│   ├── install.sql
+│   ├── seed.sql
+│   └── updates/
+│
+└── install/
+├── index.php
+├── requirements.php
+├── database.php
+└── complete.php
+
+==================================================
+5. PUBLIC WEBSITE / LANDING PAGE
+
+Create a professional public-facing landing website.
+
+Include:
+
+* Premium hero section.
+* Website logo and brand name.
+* Header navigation.
+* Login and Register buttons.
+* Services overview.
+* Why Choose Us section.
+* Features section.
+* How It Works section.
+* FAQ section.
+* Contact section.
+* Footer.
+* SEO metadata.
+* Responsive layout.
+
+All website content and settings that are intended to be editable must be manageable through Admin Panel.
+
+No fake reviews, fake user counts or fake sales statistics.
+
+==================================================
+6. USER REGISTRATION AND AUTHENTICATION
+
+Create a complete user authentication system.
+
+Features:
+
+* User Registration.
+* User Login.
+* Logout.
+* Forgot Password.
+* Password Reset.
+* Secure Sessions.
+* Account Status.
+* Profile Management.
+* Change Password.
+* User Notifications.
+
+Rules:
+
+* Passwords must be hashed.
+* Validate all user inputs.
+* Prevent duplicate accounts using configured unique fields.
+* Add rate limiting.
+* Regenerate sessions after successful login.
+* Do not reveal sensitive account information.
+* Users must only access their own records.
+
+==================================================
+7. COMPLETE USER PANEL
+
+A. User Dashboard
+
+Display real database information:
+
+* Wallet Balance.
+* Total Orders.
+* Pending Orders.
+* Processing Orders.
+* Completed Orders.
+* Partial Orders.
+* Cancelled Orders.
+* Recent Orders.
+* Recent Transactions.
+* Quick Action Cards.
+
+All statistics must be calculated from actual records.
+
+B. New Order
+
+Build a complete order form.
+
+Fields:
+
+* Category.
+* Service.
+* Service Description.
+* Service ID.
+* Target Link.
+* Quantity.
+* Price.
+* Estimated Charge.
+
+Features:
+
+* Category selection.
+* Dynamic service selection.
+* Search services.
+* Service details.
+* Minimum/Maximum quantity validation.
+* Live price calculation.
+* Server-side price calculation.
+* Wallet balance validation.
+* Order confirmation.
+* Proper error and success messages.
+
+Do not trust frontend calculations.
+
+C. Bulk Order
+
+* Multiple order submission.
+* Supported input format.
+* Validate each line.
+* Validate service and quantity.
+* Show errors for invalid lines.
+* Calculate total cost.
+* Deduct balance safely.
+* Prevent duplicate submissions.
+
+D. Services
+
+* All Categories.
+* All Active Services.
+* Search.
+* Filters.
+* Service ID.
+* Service Name.
+* Description.
+* Minimum Quantity.
+* Maximum Quantity.
+* Price per 1000.
+
+E. Order History
+
+* All Orders.
+* Pending.
+* Processing.
+* In Progress.
+* Completed.
+* Partial.
+* Cancelled.
+* Failed.
+* Search and Filters.
+* Order Details.
+* Provider Status.
+* Refill Request where supported.
+* Cancel Request where supported.
+
+F. Wallet
+
+* Current Balance.
+* Add Funds.
+* Razorpay.
+* Manual Payment.
+* Transaction History.
+* Deposit Status.
+* Payment Details.
+
+G. Support
+
+* Create Ticket.
+* Ticket Subject.
+* Ticket Message.
+* Ticket History.
+* Admin Replies.
+* Ticket Status.
+* Close Ticket.
+
+H. Account
+
+* Profile.
+* Change Password.
+* Notifications.
+* API Access.
+* API Documentation.
+* Logout.
+
+==================================================
+8. COMPLETE ADMIN PANEL
+
+Admin Panel must be independent from User Panel and protected by separate authentication and authorization.
+
+A. Admin Dashboard
+
+Show real database statistics:
+
+* Total Users.
+* Active Users.
+* Total Orders.
+* Pending Orders.
+* Processing Orders.
+* Completed Orders.
+* Partial Orders.
+* Cancelled Orders.
+* Total Deposits.
+* Total Revenue.
+* Today’s Revenue.
+* Wallet Statistics.
+* Recent Orders.
+* Recent Users.
+* Revenue Charts.
+
+Never display fabricated numbers.
+
+B. User Management
+
+* All Users.
+* Search Users.
+* Add User.
+* Edit User.
+* View User Details.
+* Block/Unblock.
+* Change Password through a secure process.
+* Manage Wallet.
+* User Transactions.
+* User Orders.
+* Account Status.
+
+C. Order Management
+
+* All Orders.
+* Filter by Status.
+* Search by Order ID.
+* Search by User.
+* Order Details.
+* Provider Order ID.
+* Manual Status Update.
+* Refill Management.
+* Cancellation Management.
+* Refund Management.
+* Order Logs.
+* Bulk Order Management.
+
+Manual changes must be logged with admin ID, timestamp and reason.
+
+D. Category Management
+
+* Create Category.
+* Edit Category.
+* Delete Category with dependency checks.
+* Sort Categories.
+* Enable/Disable.
+* Category Display Settings.
+
+E. Service Management
+
+* Create Service.
+* Edit Service.
+* Delete Service with dependency checks.
+* Service Name.
+* Service ID.
+* Category.
+* Description.
+* Rate.
+* Minimum Quantity.
+* Maximum Quantity.
+* Provider Mapping.
+* Enable/Disable.
+* Sort Services.
+* Service Search.
+
+F. Provider Management
+
+Support multiple external SMM providers.
+
+* Add Provider.
+* Edit Provider.
+* Delete/Disable Provider.
+* Provider Name.
+* API URL.
+* API Key.
+* Provider Balance.
+* Connection Test.
+* Provider Service Import.
+* Service Mapping.
+* Service Price Adjustment.
+* Automatic Order Forwarding.
+* Order Status Synchronization.
+* Refill API.
+* Cancel API.
+* Provider Logs.
+
+Use actual API documentation for every provider.
+
+Do not invent API URLs, actions, parameters or response structures.
+
+Keep API credentials encrypted or otherwise securely protected at rest, and never expose them to frontend code.
+
+G. Payment Gateway Management
+
+Implement two payment methods initially:
+
+1. Razorpay — Real Integration.
+2. Manual Payment — Admin Approved.
+
+Admin must be able to:
+
+* Enable/Disable Razorpay.
+* Enable/Disable Manual Payment.
+* Configure Razorpay Key ID.
+* Configure Razorpay Secret securely.
+* Configure Manual Payment Instructions.
+* Set Minimum Deposit.
+* Set Maximum Deposit.
+* Review Payment History.
+* Approve/Reject Manual Payments.
+
+Razorpay requirements:
+
+* Use actual Razorpay API.
+* Create payment orders server-side.
+* Verify payment signatures server-side.
+* Verify payment amount and currency.
+* Prevent replay and duplicate credit.
+* Handle payment failures.
+* Save payment records.
+* Credit wallet only after verified payment.
+
+Never mark payments successful merely because the browser reports success.
+
+H. Wallet and Transactions
+
+* View All Transactions.
+* Add Balance.
+* Deduct Balance.
+* Refund Balance.
+* Wallet History.
+* User Wallet Details.
+* Transaction Ledger.
+* Admin Adjustment History.
+
+Every balance change must create an immutable ledger record.
+
+I. Support Management
+
+* All Tickets.
+* Open Tickets.
+* Closed Tickets.
+* Ticket Details.
+* Reply to Users.
+* Close/Reopen.
+* Search and Filters.
+
+J. Website Management
+
+* Website Name.
+* Logo.
+* Favicon.
+* Landing Page Content.
+* Contact Details.
+* FAQ.
+* Announcements.
+* Static Pages.
+* SEO Settings.
+* Footer Settings.
+
+K. Theme Management
+
+Only ONE theme must exist initially:
+
+CLASSIC
+
+* Activate Classic.
+* Configure Classic settings.
+* Preview Classic where possible.
+
+Build the theme architecture so additional themes can be added later.
+
+Do not create Aurora, SwipeX or other themes now.
+
+L. Staff Management
+
+Support two main administrative roles:
+
+SUPER ADMIN:
+
+* Complete control.
+* Manage all settings.
+* Manage admins and staff.
+* Manage permissions.
+* Access all modules.
+
+STAFF ADMIN:
+
+* Restricted access.
+* Permissions assigned by Super Admin.
+* Cannot bypass authorization by manually entering URLs.
+
+Implement granular permissions for administrative modules.
+
+M. Reports
+
+* Sales Reports.
+* Order Reports.
+* User Reports.
+* Payment Reports.
+* Provider Reports.
+* Date Filters.
+* Export CSV where appropriate.
+
+N. Logs and Backups
+
+* Admin Activity Logs.
+* API Logs.
+* Error Logs.
+* Payment Logs.
+* Provider Logs.
+* Database Backup.
+* Backup Download.
+* Backup Retention Settings.
+
+Protect backup files from public access.
+
+==================================================
+9. WALLET AND FINANCIAL INTEGRITY
+
+This is a financially sensitive system. Implement it carefully.
+
+Rules:
+
+* Use MySQL transactions.
+* Use row-level locking where appropriate.
+* Prevent double deductions.
+* Prevent duplicate wallet credits.
+* Prevent duplicate refunds.
+* Maintain an immutable transaction ledger.
+* Validate all amounts server-side.
+* Use DECIMAL types for monetary values.
+* Never use floating-point arithmetic for financial calculations.
+* Use idempotency protection for payment callbacks and order submissions.
+* Record every financial operation with reference IDs and timestamps.
+
+Wallet balance and ledger must remain consistent.
+
+==================================================
+10. ORDER PROCESSING SYSTEM
+
+Create an actual working SMM order engine.
+
+Flow:
+
+1. User selects category.
+2. User selects service.
+3. User enters target link and quantity.
+4. Server validates service.
+5. Server validates quantity.
+6. Server calculates final amount.
+7. Server verifies wallet balance.
+8. Server reserves/deducts funds safely.
+9. Order is created.
+10. Order is submitted to the mapped provider when applicable.
+11. Provider response is validated.
+12. Provider order ID is stored.
+13. Order status is synchronized.
+14. Refunds and partial refunds are calculated correctly.
+
+Support provider-supported statuses:
+
+* Pending.
+* Processing.
+* In Progress.
+* Completed.
+* Partial.
+* Cancelled.
+* Failed.
+
+Do not fabricate completion statuses.
+
+Handle provider downtime, timeouts, invalid responses and API errors.
+
+Ensure failed provider submissions do not leave users charged incorrectly.
+
+==================================================
+11. PUBLIC API FOR USERS
+
+Create an API for users who have been granted API access.
+
+Support:
+
+* API Authentication.
+* API Balance.
+* API Services.
+* API Add Order.
+* API Order Status.
+* API Refill where supported.
+
+Requirements:
+
+* API keys must be securely generated.
+* Store keys securely.
+* Never expose raw secrets unnecessarily.
+* Validate every API request.
+* Rate limit requests.
+* Return consistent JSON responses.
+* Prevent duplicate requests where appropriate.
+* Enforce account permissions and balance checks.
+
+Provide API documentation inside the User Panel.
+
+==================================================
+12. CLASSIC THEME DESIGN SYSTEM
+
+Build only ONE complete theme called Classic.
+
+Design:
+
+* Premium White + Premium Purple.
+* Professional SMM Panel appearance.
+* Modern typography.
+* Clean spacing.
+* Beautiful dashboard cards.
+* Premium SVG icons.
+* Elegant forms.
+* Modern tables.
+* Responsive mobile design.
+* Responsive desktop design.
+* Lightweight animations.
+* Consistent components.
+* Professional alerts and modals.
+
+User and Admin interfaces should share a consistent design language while retaining separate navigation and layouts.
+
+No generic dashboard template.
+
+No fake content.
+
+No visible development credits.
+
+No unnecessary decorative elements.
+
+Keep theme CSS and JavaScript isolated inside the Classic theme where practical.
+
+Use Tailwind CSS without requiring a Node build process in production. Provide compiled or locally available assets where needed.
+
+==================================================
+13. DATABASE ARCHITECTURE
+
+Use MySQL with a proper relational schema.
+
+Create appropriate tables, including:
+
+* admins
+* staff_admins or admin role records
+* admin_permissions
+* users
+* categories
+* services
+* providers
+* provider_service_mapping
+* orders
+* order_logs
+* wallets
+* wallet_transactions
+* payments
+* payment_methods
+* support_tickets
+* ticket_messages
+* notifications
+* api_keys
+* announcements
+* pages
+* settings
+* theme_settings
+* admin_activity_logs
+* provider_logs
+* error_logs
+* password_reset_tokens
+
+Use suitable:
+
+* Primary keys.
+* Foreign keys.
+* Unique constraints.
+* Indexes.
+* DECIMAL monetary columns.
+* Created and updated timestamps.
+* Appropriate cascading/restrict rules.
+
+Avoid duplicate and unnecessary tables.
+
+Provide:
+
+database/install.sql
+database/seed.sql
+database/updates/
+
+The installation SQL must create the complete initial schema.
+
+Seed only essential initial settings and necessary setup data. Do not insert fake orders, fake payments or fake users.
+
+==================================================
+14. SECURE WEB INSTALLER
+
+Build a working installer accessible through:
+
+domain.com/install/
+
+Installer steps:
+
+1. Welcome.
+2. Server Requirements.
+3. PHP Extension Checks.
+4. Folder Permission Checks.
+5. MySQL Configuration.
+6. Database Connection Test.
+7. Database Installation.
+8. Initial Super Admin Creation.
+9. Configuration Generation.
+10. Installation Verification.
+11. Installer Locking.
+
+Requirements:
+
+* Support cPanel hosting.
+* No Composer requirement.
+* No Node.js requirement.
+* Do not expose database credentials.
+* Prevent installer reuse after successful installation.
+* Provide clear error messages.
+* Do not silently fail.
+
+Do not hardcode database credentials.
+
+==================================================
+15. SECURITY AND PROTECTION
+
+Implement:
+
+* PDO Prepared Statements.
+* Password Hashing.
+* Secure Session Cookies.
+* Session Regeneration.
+* CSRF Tokens.
+* XSS Protection.
+* SQL Injection Protection.
+* Input Validation.
+* Output Escaping.
+* Role-Based Access Control.
+* Login Rate Limiting.
+* Secure File Upload Validation.
+* Protected Storage.
+* Protected Configuration.
+* Secure .htaccess.
+* Secure Password Reset.
+* API Rate Limiting.
+* Audit Logging.
+* Secure Payment Callbacks.
+
+Use HTTPS-aware cookie configuration.
+
+Never disable security to solve a routing, CSS or login problem.
+
+Do not expose detailed PHP errors to visitors.
+
+Log exceptions safely to protected storage/logs.
+
+==================================================
+16. LOGIN AND WHITE PAGE PREVENTION
+
+Login stability is a critical requirement.
+
+Create centralized authentication and session handling.
+
+Admin and User must have separate protected access.
+
+After successful login:
+
+* Regenerate session ID.
+* Set correct authenticated session data.
+* Validate session.
+* Redirect to the correct dashboard.
+* Ensure database connection remains available.
+* Ensure all required includes load.
+* Ensure theme rendering succeeds.
+
+Every PHP page must handle errors properly.
+
+Never return a blank white page.
+
+Implement:
+
+* Centralized exception handling.
+* Protected error logging.
+* Proper HTTP status codes.
+* Safe user-facing error messages.
+* Correct redirects.
+* Correct include paths.
+
+Test both login flows repeatedly.
+
+==================================================
+17. CRON JOBS
+
+Create real PHP cron scripts for:
+
+* Order Processing.
+* Order Status Synchronization.
+* Provider Balance Synchronization.
+* Provider Service Synchronization.
+* Refill Processing.
+* Log Cleanup.
+* Temporary File Cleanup.
+
+Requirements:
+
+* Secure cron access.
+* Prevent unauthorized browser execution.
+* Avoid overlapping jobs where necessary.
+* Add execution logging.
+* Handle API failures.
+* Do not create duplicate processing.
+
+Provide exact cPanel cron configuration examples and recommended schedules.
+
+==================================================
+18. EMAIL AND NOTIFICATIONS
+
+Create notification support for:
+
+* New Order.
+* Order Processing.
+* Order Completed.
+* Order Partial.
+* Order Cancelled.
+* Payment Successful.
+* Payment Pending.
+* Payment Rejected.
+* Wallet Updates.
+* Support Replies.
+* Important Announcements.
+
+Provide an email configuration interface.
+
+Use secure mail handling and never claim an email was sent unless the sending operation succeeds.
+
+==================================================
+19. PERFORMANCE AND RESPONSIVENESS
+
+* Optimize MySQL queries.
+* Add indexes.
+* Use pagination.
+* Avoid loading unnecessary data.
+* Lazy-load suitable images.
+* Minimize CSS and JS where practical.
+* Use AJAX where appropriate.
+* Avoid full-page reloads when an asynchronous interaction is suitable.
+* Ensure mobile responsiveness.
+* Ensure desktop responsiveness.
+* Avoid heavy unnecessary libraries.
+
+==================================================
+20. ERROR HANDLING AND DEBUGGING
+
+Every module must have proper error handling.
+
+* Log PHP errors.
+* Log database errors safely.
+* Log provider API failures.
+* Log payment verification failures.
+* Log unexpected exceptions.
+* Show useful messages to users.
+* Never expose secrets or stack traces publicly.
+* Never suppress errors silently.
+
+If something fails, find and fix its actual root cause.
+
+Do not apply random CSS, JavaScript, session or .htaccess changes to hide backend errors.
+
+==================================================
+21. DEVELOPMENT ORDER — STRICT STAGES
+
+Build the project in these stages:
+
+STAGE 1:
+Project root, folder structure, configuration and bootstrap.
+
+STAGE 2:
+MySQL schema, database connection and installer.
+
+STAGE 3:
+Authentication, sessions, permissions and security foundation.
+
+STAGE 4:
+Admin Panel layout and Admin Dashboard.
+
+STAGE 5:
+User Panel layout and User Dashboard.
+
+STAGE 6:
+Classic Theme and responsive components.
+
+STAGE 7:
+User management, categories and services.
+
+STAGE 8:
+Provider API management and service import.
+
+STAGE 9:
+Wallet, transactions and payment gateways.
+
+STAGE 10:
+New Orders, Bulk Orders and Order Processing.
+
+STAGE 11:
+Order synchronization, refill and refund handling.
+
+STAGE 12:
+Support Tickets and Notifications.
+
+STAGE 13:
+Public API and API documentation.
+
+STAGE 14:
+Reports, Logs, Backups and Settings.
+
+STAGE 15:
+Cron Jobs and Email Configuration.
+
+STAGE 16:
+Security Audit, Performance Audit and Final Testing.
+
+Do not skip stages.
+
+Do not start building unrelated modules before the foundation is tested.
+
+Do not deliver a static demo as a completed stage.
+
+==================================================
+22. TESTING REQUIREMENTS
+
+Test the actual functionality.
+
+Admin:
+
+* Login.
+* Logout.
+* Dashboard.
+* User Management.
+* Staff Permissions.
+* Categories.
+* Services.
+* Provider Settings.
+* Payments.
+* Transactions.
+* Orders.
+* Tickets.
+* Reports.
+* Theme Settings.
+
+User:
+
+* Registration.
+* Login.
+* Logout.
+* Dashboard.
+* New Order.
+* Bulk Order.
+* Service Search.
+* Order History.
+* Wallet.
+* Razorpay.
+* Manual Payment.
+* Support Tickets.
+* Notifications.
+* Profile.
+* API Access.
+
+System:
+
+* Database connection.
+* Installer.
+* Session persistence.
+* CSRF validation.
+* Role permissions.
+* CSS loading.
+* JavaScript loading.
+* Responsive layouts.
+* Cron jobs.
+* Error logging.
+* Financial consistency.
+* Provider API error handling.
+
+Do not claim tests passed if they were not executed.
+
+==================================================
+23. FINAL DELIVERY RULES
+
+The final deliverable must include:
+
+* Complete PHP source code.
+* Complete MySQL installation SQL.
+* Seed SQL.
+* Safe migration files.
+* Working Admin Panel.
+* Working User Panel.
+* Working Classic Theme.
+* Working Installer.
+* Provider API system.
+* Razorpay integration.
+* Manual payment system.
+* Wallet and ledger.
+* Order processing.
+* Security implementation.
+* Cron scripts.
+* cPanel deployment instructions.
+* Admin setup instructions.
+* User setup instructions.
+* API documentation.
+* Final testing report.
+
+Before delivery:
+
+1. Scan the entire project recursively.
+2. Confirm zero .ts files.
+3. Confirm zero .tsx files.
+4. Confirm no prohibited framework dependencies.
+5. Confirm root folder structure.
+6. Confirm no unnecessary wrapper folders.
+7. Confirm all required PHP files exist.
+8. Verify all important links and paths.
+9. Verify CSS and JavaScript assets.
+10. Verify login and dashboard access.
+11. Verify database schema.
+12. Report every untested or incomplete feature honestly.
+
+==================================================
+24. ABSOLUTE FINAL INSTRUCTIONS
+
+NEVER:
+
+* Convert this website into an app or applet.
+* Create app/, applet/, src/, frontend/ or backend/ architectures.
+* Create .ts or .tsx files.
+* Use React, Node.js or other prohibited frameworks.
+* Use SQLite.
+* Create a frontend-only demo.
+* Use fake statistics or fake functionality.
+* Create additional themes without permission.
+* Add OTP marketplace or unrelated services.
+* Change the root directory structure.
+* Hide errors with blank pages.
+* Claim untested functionality is working.
+* Skip database or backend implementation.
+* Leave buttons and forms nonfunctional.
+* Expose passwords, API keys or payment secrets.
+
+ALWAYS:
+
+* Use Core PHP + MySQL + PDO.
+* Use Tailwind CSS + Alpine.js + Vanilla JavaScript.
+* Keep root folders directly as /admin/, /user/, /api/ and so on.
+* Build real backend functionality.
+* Use secure database operations.
+* Maintain financial accuracy.
+* Build only Classic theme initially.
+* Keep code modular and cPanel-compatible.
+* Test each development stage.
+* Follow every requirement in this specification.
+
+FINAL GOAL:
+
+A complete, professional, secure, production-ready SMM Panel website that works on real PHP/MySQL hosting.
+
+This is not a demo, not a mobile app, not an applet and not a frontend prototype.
+
+It must be a real website with a complete working Admin Panel, User Panel and backend.
+
+STRICT ZERO-TOLERANCE POLICY: ZERO .ts FILES AND ZERO .tsx FILES IN THE FINAL PROJECT.

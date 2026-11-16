@@ -1,0 +1,19 @@
+/* ApexSMM Classic Theme — Admin Panel Styles */
+.admin-sidebar-purple {
+  background: linear-gradient(180deg, #2E1065 0%, #3B0764 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar-purple .nav-item {
+  color: #E9D5FF;
+}
+
+.admin-sidebar-purple .nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.admin-sidebar-purple .nav-item.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+}

@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /user/
+Disallow: /api/
+Disallow: /config/
+Disallow: /core/
+Disallow: /includes/
+Disallow: /modules/
+Disallow: /cron/
+Disallow: /storage/
+Disallow: /database/
+Disallow: /install/

@@ -1,0 +1,31 @@
+# ApexSMM Panel - Apache Security & Routing Configuration
+Options -Indexes -MultiViews
+ServerSignature Off
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to protected system directories
+    RewriteRule ^(config|core|includes|modules|cron|storage|database)/ - [F,L]
+
+    # Block hidden files and sensitive extensions
+    RewriteRule ^\. - [F,L]
+    RewriteRule \.(sql|log|lock|bak|ini|sh|md|json)$ - [F,L]
+
+    # Clean URL for public static pages (/page/terms -> /page.php?slug=terms)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^page/([a-zA-Z0-9\-_]+)/?$ page.php?slug=$1 [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Prevent PHP execution in uploads directory
+<IfModule mod_php.c>
+    php_flag display_errors Off
+</IfModule>
