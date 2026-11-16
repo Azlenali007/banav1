@@ -95,10 +95,10 @@ class Payment
 
         $decAmount = Validator::parseDecimal($amount, 2);
         if ($decAmount === null || money_cmp($decAmount, (string)$method['min_amount']) < 0 || money_cmp($decAmount, (string)$method['max_amount']) > 0) {
-            return ['success' => false, 'error' => "Deposit amount must be between {$method['min_amount']} and {$method['max_amount']}."];
+            return ['success' => false, 'error' => 'Deposit amount must be between ' . format_money($method['min_amount'], 2) . ' and ' . format_money($method['max_amount'], 2) . '.'];
         }
 
-        $currency = strtoupper(get_setting('currency_code', DEFAULT_CURRENCY));
+        $currency = Currency::baseCode();
         $subunits = (int)round((float)money_mul($decAmount, '100', 0));
         if ($subunits < 100) {
             return ['success' => false, 'error' => 'Amount too small for Razorpay processing.'];
@@ -223,6 +223,11 @@ class Payment
 
             $pdo->commit();
             Notification::send((int)$payment['user_id'], 'payment_success', 'Funds Added: ' . format_money($payment['amount']), "Your Razorpay deposit {$payment['payment_uid']} has been verified and credited to your wallet.", '/user/transactions.php', true);
+            try {
+                Referral::processEvent((int)$payment['user_id'], 'first_deposit', (string)$payment['amount']);
+            } catch (Throwable $e) {
+                Logger::error('Payment::verifyRazorpay referral', $e->getMessage(), $e->getFile(), $e->getLine());
+            }
 
             return ['success' => true, 'duplicate' => false, 'payment_uid' => $payment['payment_uid'], 'amount' => $payment['amount']];
         } catch (Throwable $e) {
@@ -243,7 +248,7 @@ class Payment
 
         $decAmount = Validator::parseDecimal($amount, 2);
         if ($decAmount === null || money_cmp($decAmount, (string)$method['min_amount']) < 0 || money_cmp($decAmount, (string)$method['max_amount']) > 0) {
-            return ['success' => false, 'error' => "Deposit amount must be between {$method['min_amount']} and {$method['max_amount']}."];
+            return ['success' => false, 'error' => 'Deposit amount must be between ' . format_money($method['min_amount'], 2) . ' and ' . format_money($method['max_amount'], 2) . '.'];
         }
 
         $reference = Validator::cleanString($reference, 150);
@@ -260,7 +265,7 @@ class Payment
             $proofFilename = $up['filename'];
         }
 
-        $currency = strtoupper(get_setting('currency_code', DEFAULT_CURRENCY));
+        $currency = Currency::baseCode();
         $paymentUid = 'MAN-' . strtoupper(bin2hex(random_bytes(5)));
 
         $paymentId = Database::insert(
@@ -310,6 +315,11 @@ class Payment
             );
 
             Logger::adminActivity($adminId, 'payment.approve', 'payment', $paymentId, "Approved manual payment {$payment['payment_uid']} for {$payment['amount']}");
+            try {
+                Referral::processEvent((int)$payment['user_id'], 'first_deposit', (string)$payment['amount']);
+            } catch (Throwable $e) {
+                Logger::error('Payment::approveManualPayment referral', $e->getMessage(), $e->getFile(), $e->getLine());
+            }
             $pdo->commit();
 
             Notification::send((int)$payment['user_id'], 'payment_success', 'Deposit Approved: ' . $payment['payment_uid'], "Your manual deposit of " . format_money($payment['amount']) . " has been approved and credited to your wallet.", '/user/transactions.php', true);

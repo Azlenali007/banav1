@@ -240,6 +240,14 @@ function money_cmp(string $a, string $b, int $scale = 4): int
 
 function format_money(mixed $amount, int $decimals = 2): string
 {
+    if (class_exists('Currency')) {
+        try {
+            return Currency::format($amount, null, $decimals);
+        } catch (Throwable) {
+            // Fall through to the legacy formatter when the currency registry
+            // is unavailable (e.g. during installation).
+        }
+    }
     $symbol = function_exists('get_setting') ? get_setting('currency_symbol', DEFAULT_CURRENCY_SYMBOL) : DEFAULT_CURRENCY_SYMBOL;
     $formatted = number_format((float)money_format_dec((string)$amount, 4), $decimals, '.', ',');
     return $symbol . $formatted;

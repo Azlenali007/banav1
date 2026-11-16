@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CSRF::verifyOrAbort();
     $gateway = (string)($_POST['gateway'] ?? '');
     if ($gateway === 'razorpay') {
-        $amount = (string)($_POST['amount'] ?? '');
+        $amount = Currency::toBase((string)($_POST['amount'] ?? '0'), Currency::displayCode(), 4);
         $res = Payment::createRazorpayOrder($userId, $amount);
         if ($res['success']) {
             $razorpayOrderPayload = $res;
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = (string)$res['error'];
         }
     } elseif ($gateway === 'manual') {
-        $amount = (string)($_POST['amount'] ?? '');
+        $amount = Currency::toBase((string)($_POST['amount'] ?? '0'), Currency::displayCode(), 4);
         $ref = (string)($_POST['transaction_reference'] ?? '');
         $proof = $_FILES['proof_file'] ?? null;
         $res = Payment::submitManualPayment($userId, $amount, $ref, $proof);

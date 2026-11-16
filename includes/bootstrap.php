@@ -25,6 +25,10 @@ require_once CORE_PATH . '/Notification.php';
 require_once CORE_PATH . '/Provider.php';
 require_once CORE_PATH . '/Order.php';
 require_once CORE_PATH . '/Payment.php';
+require_once CORE_PATH . '/Currency.php';
+require_once CORE_PATH . '/CurrencyRateProvider.php';
+require_once CORE_PATH . '/Referral.php';
+require_once CORE_PATH . '/LoginPopup.php';
 
 require_once INCLUDES_PATH . '/permissions.php';
 require_once INCLUDES_PATH . '/notifications.php';

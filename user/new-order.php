@@ -14,8 +14,10 @@ $services = Database::fetchAll(
      ORDER BY c.sort_order ASC, s.sort_order ASC, s.id ASC"
 );
 
+$displayCode = Currency::displayCode();
 foreach ($services as &$svc) {
-    $svc['effective_rate'] = (float)money_mul((string)$svc['rate_per_1000'], $multiplier, 4);
+    $baseEffectiveRate = money_mul((string)$svc['rate_per_1000'], $multiplier, 4);
+    $svc['effective_rate'] = (float)Currency::fromBase($baseEffectiveRate, $displayCode, 4);
 }
 unset($svc);
 
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $formIdemKey = bin2hex(random_bytes(16));
-$currencySymbol = (string)get_setting('currency_symbol', DEFAULT_CURRENCY_SYMBOL);
+$currencySymbol = Currency::symbolFor($displayCode);
 
 Theme::render('user/new-order', [
     'currentUser' => $currentUser,

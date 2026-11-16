@@ -36,7 +36,7 @@ class Auth
         );
     }
 
-    public static function registerUser(string $username, string $email, string $fullName, string $password): array
+    public static function registerUser(string $username, string $email, string $fullName, string $password, ?string $referralCode = null): array
     {
         $username = Validator::cleanString($username, 60);
         $email = strtolower(Validator::cleanString($email, 150));
@@ -77,6 +77,21 @@ class Auth
                 'INSERT INTO wallets (user_id, balance, total_deposited, total_spent, currency, created_at, updated_at) VALUES (?, 0.0000, 0.0000, 0.0000, ?, NOW(), NOW())',
                 [$userId, $currency]
             );
+
+            // Every account gets a shareable referral code. Attribution is
+            // best-effort and must never block account creation.
+            try {
+                Referral::ensureCode($userId);
+                $referralCode = Validator::cleanString($referralCode ?? '', 30);
+                if ($referralCode !== '') {
+                    $attribution = Referral::attribute($userId, $referralCode);
+                    if (!$attribution['success']) {
+                        Logger::file('referral', 'WARN', 'Registration referral attribution failed', ['user_id' => $userId, 'error' => $attribution['error'] ?? '']);
+                    }
+                }
+            } catch (Throwable $e) {
+                Logger::error('Auth::registerUser referral', $e->getMessage(), $e->getFile(), $e->getLine());
+            }
 
             $pdo->commit();
             return ['success' => true, 'user_id' => $userId];
@@ -125,6 +140,7 @@ class Auth
             'username' => $user['username'],
             'logged_in_at' => time(),
         ]);
+        LoginPopup::markLogin();
 
         Database::execute(
             'UPDATE users SET last_login_at = NOW(), last_login_ip = ? WHERE id = ?',

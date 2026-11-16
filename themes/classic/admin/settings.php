@@ -153,6 +153,10 @@ declare(strict_types=1);
       */5 * * * * /usr/local/bin/php <?= e(BASE_PATH) ?>/cron/process-refills.php >/dev/null 2>&amp;1
     </div>
     <div class="p-3 rounded-xl bg-slate-900 text-emerald-300 overflow-x-auto">
+      <div class="text-slate-400 mb-1"># Every 6 hours: Refresh currency exchange rates</div>
+      0 */6 * * * /usr/local/bin/php <?= e(BASE_PATH) ?>/cron/sync-currency-rates.php >/dev/null 2>&amp;1
+    </div>
+    <div class="p-3 rounded-xl bg-slate-900 text-emerald-300 overflow-x-auto">
       <div class="text-slate-400 mb-1"># Daily at 3:00 AM: Cleanup old logs, temp files &amp; expired backups</div>
       0 3 * * * /usr/local/bin/php <?= e(BASE_PATH) ?>/cron/cleanup.php >/dev/null 2>&amp;1
     </div>

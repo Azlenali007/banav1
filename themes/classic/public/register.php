@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-/** @var bool $registrationEnabled @var string $error @var string $fullName @var string $username @var string $email */
+/** @var bool $registrationEnabled @var string $error @var string $fullName @var string $username @var string $email @var string $referralCode @var ?array $referrer */
 ?>
 <div class="flex-1 flex items-center justify-center px-4 py-12">
   <div class="smm-card max-w-md w-full p-7 sm:p-8">
@@ -16,6 +16,15 @@ declare(strict_types=1);
     <?php else: ?>
       <?php if ($error !== ''): ?>
         <div class="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm"><?= e($error) ?></div>
+      <?php endif; ?>
+      <?php if ($referralCode !== '' && $referrer): ?>
+        <div class="mb-4 px-4 py-3 rounded-xl bg-violet-50 border border-violet-200 text-violet-900 text-sm">
+          Referred by <strong><?= e($referrer['username']) ?></strong>. Your referral bonus will be applied automatically.
+        </div>
+      <?php elseif ($referralCode !== ''): ?>
+        <div class="mb-4 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm">
+          Referral code <strong><?= e($referralCode) ?></strong> was not recognized. You can still create an account.
+        </div>
       <?php endif; ?>
 
       <form method="POST" class="space-y-4">
@@ -39,6 +48,10 @@ declare(strict_types=1);
         <div>
           <label class="smm-label">Confirm Password</label>
           <input type="password" name="password_confirm" required minlength="8" class="smm-input" autocomplete="new-password">
+        </div>
+        <div>
+          <label class="smm-label">Referral Code <span class="font-normal text-slate-400">(optional)</span></label>
+          <input type="text" name="ref" value="<?= e($referralCode) ?>" class="smm-input uppercase" placeholder="e.g. ALEX1A2B3C" autocomplete="off">
         </div>
         <button type="submit" class="btn-primary w-full py-2.5 text-sm">Create Account</button>
       </form>

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-/** @var int $providerId @var array $provider @var array $categories @var array $remoteServices @var string $fetchError */
+/** @var int $providerId @var array $provider @var array $categories @var array $remoteServices @var array $existingIds @var string $fetchError */
 ?>
 <div class="mb-6">
   <a href="<?= e(app_url('/admin/providers.php')) ?>" class="text-xs font-semibold text-violet-700 hover:underline">&larr; Back to Providers</a>
@@ -43,11 +43,15 @@ declare(strict_types=1);
         <input type="number" step="0.01" name="markup_value" value="25" required class="smm-input">
       </div>
       <button type="submit" class="btn-primary py-2.5 px-5 text-sm">Import Selected</button>
+      <p class="sm:col-span-4 text-[11px] text-slate-500">
+        Already-imported provider services are marked and skipped automatically. Duplicate detection uses provider + provider service ID, so re-importing is safe.
+      </p>
     </div>
 
     <div class="smm-card overflow-hidden">
       <div class="px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
         Showing <?= min(500, count($remoteServices)) ?> services returned by provider API
+        &mdash; <?= count($existingIds) ?> already imported
       </div>
       <div class="smm-table-wrap max-h-[600px] overflow-y-auto">
         <table class="smm-table">
@@ -63,9 +67,15 @@ declare(strict_types=1);
           </thead>
           <tbody>
             <?php foreach (array_slice($remoteServices, 0, 500) as $rs): ?>
-              <tr>
-                <td><input type="checkbox" name="selected_services[]" value="<?= e($rs['service'] ?? '') ?>" class="psvc-chk"></td>
-                <td class="font-mono text-xs"><?= e($rs['service'] ?? '') ?></td>
+              <?php $isImported = isset($existingIds[(string)($rs['service'] ?? '')]); ?>
+              <tr class="<?= $isImported ? 'opacity-60' : '' ?>">
+                <td>
+                  <input type="checkbox" name="selected_services[]" value="<?= e($rs['service'] ?? '') ?>" class="psvc-chk" <?= $isImported ? 'disabled' : '' ?>>
+                </td>
+                <td class="font-mono text-xs">
+                  <?= e($rs['service'] ?? '') ?>
+                  <?php if ($isImported): ?><span class="badge badge-neutral ml-1">Imported</span><?php endif; ?>
+                </td>
                 <td class="text-xs font-semibold"><?= e($rs['name'] ?? '') ?></td>
                 <td class="text-xs text-slate-500"><?= e($rs['category'] ?? '') ?></td>
                 <td class="text-xs font-bold text-violet-700"><?= e($rs['rate'] ?? '0') ?></td>

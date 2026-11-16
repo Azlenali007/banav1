@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 /** @var array $currentUser @var ?array $razorpay @var ?array $manual @var bool $rzpEnabled @var bool $manualEnabled @var string $error @var ?array $razorpayOrderPayload */
+$displayCode = Currency::displayCode();
+$rzpMin = $razorpay ? money_format_dec(Currency::fromBase((string)$razorpay['min_amount'], $displayCode, 4), 2) : '0.00';
+$rzpMax = $razorpay ? money_format_dec(Currency::fromBase((string)$razorpay['max_amount'], $displayCode, 4), 2) : '0.00';
+$manMin = $manual ? money_format_dec(Currency::fromBase((string)$manual['min_amount'], $displayCode, 4), 2) : '0.00';
+$manMax = $manual ? money_format_dec(Currency::fromBase((string)$manual['max_amount'], $displayCode, 4), 2) : '0.00';
 ?>
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
   <div>
@@ -35,9 +40,9 @@ declare(strict_types=1);
         <?= CSRF::field() ?>
         <input type="hidden" name="gateway" value="razorpay">
         <div>
-          <label class="smm-label">Deposit Amount (<?= e(get_setting('currency_code', DEFAULT_CURRENCY)) ?>)</label>
-          <input type="number" step="0.01" min="<?= e((string)$razorpay['min_amount']) ?>" max="<?= e((string)$razorpay['max_amount']) ?>" name="amount" required class="smm-input" placeholder="100.00">
-          <p class="text-[11px] text-slate-400 mt-1">Min: <?= e(format_money($razorpay['min_amount'], 2)) ?> &bull; Max: <?= e(format_money($razorpay['max_amount'], 2)) ?></p>
+          <label class="smm-label">Deposit Amount (<?= e($displayCode) ?>)</label>
+          <input type="number" step="0.01" min="<?= e($rzpMin) ?>" max="<?= e($rzpMax) ?>" name="amount" required class="smm-input" placeholder="100.00">
+          <p class="text-[11px] text-slate-400 mt-1">Min: <?= e(format_money($razorpay['min_amount'], 2)) ?> &bull; Max: <?= e(format_money($razorpay['max_amount'], 2)) ?> &mdash; converted to <?= e(Currency::baseCode()) ?> at checkout.</p>
         </div>
         <button type="submit" class="btn-primary w-full py-2.5 text-sm">Proceed to Razorpay Checkout</button>
       </form>
@@ -68,9 +73,9 @@ declare(strict_types=1);
         <?= CSRF::field() ?>
         <input type="hidden" name="gateway" value="manual">
         <div>
-          <label class="smm-label">Amount Sent (<?= e(get_setting('currency_code', DEFAULT_CURRENCY)) ?>)</label>
-          <input type="number" step="0.01" min="<?= e((string)$manual['min_amount']) ?>" max="<?= e((string)$manual['max_amount']) ?>" name="amount" required class="smm-input" placeholder="500.00">
-          <p class="text-[11px] text-slate-400 mt-1">Min: <?= e(format_money($manual['min_amount'], 2)) ?> &bull; Max: <?= e(format_money($manual['max_amount'], 2)) ?></p>
+          <label class="smm-label">Amount Sent (<?= e($displayCode) ?>)</label>
+          <input type="number" step="0.01" min="<?= e($manMin) ?>" max="<?= e($manMax) ?>" name="amount" required class="smm-input" placeholder="500.00">
+          <p class="text-[11px] text-slate-400 mt-1">Min: <?= e(format_money($manual['min_amount'], 2)) ?> &bull; Max: <?= e(format_money($manual['max_amount'], 2)) ?> &mdash; credited as <?= e(Currency::baseCode()) ?> equivalent.</p>
         </div>
         <div>
           <label class="smm-label">Transaction ID / UTR / Reference Number</label>

@@ -14,12 +14,16 @@ $error = '';
 $fullName = '';
 $username = '';
 $email = '';
+$referralCode = strtoupper(Validator::cleanString($_GET['ref'] ?? $_POST['ref'] ?? '', 30));
+$referrer = $referralCode !== '' ? Referral::findByCode($referralCode) : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CSRF::verifyOrAbort();
     $username = (string)($_POST['username'] ?? '');
     $email = (string)($_POST['email'] ?? '');
     $fullName = (string)($_POST['full_name'] ?? '');
+    $referralCode = strtoupper(Validator::cleanString($_POST['ref'] ?? '', 30));
+    $referrer = $referralCode !== '' ? Referral::findByCode($referralCode) : null;
 
     if (!$registrationEnabled) {
         $error = 'New user registrations are currently disabled by the administrator.';
@@ -30,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($password !== $confirm) {
             $error = 'Passwords do not match.';
         } else {
-            $res = Auth::registerUser($username, $email, $fullName, $password);
+            $res = Auth::registerUser($username, $email, $fullName, $password, $referralCode !== '' ? $referralCode : null);
             if ($res['success']) {
                 Session::setFlash('success', 'Account created successfully! Please sign in.');
                 Response::redirect('/login.php');
@@ -46,6 +50,8 @@ Theme::render('public/register', [
     'fullName' => $fullName,
     'username' => $username,
     'email' => $email,
+    'referralCode' => $referralCode,
+    'referrer' => $referrer,
 ], 'public', [
     'pageTitle' => 'Create Account',
 ]);

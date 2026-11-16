@@ -24,6 +24,7 @@ $currentUser = $currentUser ?? [];
     </div>
 
     <div class="flex items-center gap-3">
+      <?php Theme::component('user/currency-selector'); ?>
       <a href="<?= e(app_url('/user/add-funds.php')) ?>" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-violet-50 border border-violet-200 text-violet-800 text-sm font-semibold hover:bg-violet-100 transition">
         <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
         <span><?= e(format_money($currentUser['wallet_balance'] ?? 0)) ?></span>

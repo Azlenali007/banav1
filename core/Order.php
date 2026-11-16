@@ -136,6 +136,12 @@ class Order
 
         Notification::send($userId, 'order_new', 'Order Placed: ' . $orderUid, "Your order {$orderUid} for {$service['name']} ({$quantity}) has been placed.", '/user/order-view.php?id=' . $orderId);
 
+        try {
+            Referral::processEvent($userId, 'first_order', $charge);
+        } catch (Throwable $e) {
+            Logger::error('Order::placeOrder referral', $e->getMessage(), $e->getFile(), $e->getLine());
+        }
+
         return [
             'success' => true,
             'order_id' => $orderId,

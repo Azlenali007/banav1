@@ -25,6 +25,9 @@ $bottomNavItems = $bottomNavItems ?? user_bottom_nav_items();
   </div>
   <?php Theme::component('user/bottom-nav', ['bottomNavItems' => $bottomNavItems]); ?>
   <?php Theme::component('shared/modals'); ?>
+  <?php if (!empty($currentUser['id'])): ?>
+    <?php Theme::component('user/login-popup', ['popup' => LoginPopup::payload((int)$currentUser['id'])]); ?>
+  <?php endif; ?>
   <?php classic_render_scripts('user'); ?>
 </body>
 </html>

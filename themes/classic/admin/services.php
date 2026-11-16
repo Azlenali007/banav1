@@ -85,6 +85,7 @@ declare(strict_types=1);
   <!-- Services Table -->
   <div class="xl:col-span-2 space-y-4">
     <form method="GET" class="smm-card p-4 flex flex-col sm:flex-row gap-3">
+      <input type="hidden" name="archived" value="<?= $showArchived ? '1' : '0' ?>">
       <input type="text" name="q" value="<?= e($q) ?>" placeholder="Search service ID or name..." class="smm-input flex-1">
       <select name="category" class="smm-input sm:w-52">
         <option value="0">All Categories</option>
@@ -93,44 +94,107 @@ declare(strict_types=1);
         <?php endforeach; ?>
       </select>
       <button type="submit" class="btn-primary px-5 py-2 text-sm">Filter</button>
+      <a href="?archived=<?= $showArchived ? '0' : '1' ?>" class="btn-secondary px-4 py-2 text-sm"><?= $showArchived ? 'View Active' : 'View Archived' ?></a>
     </form>
 
-    <div class="smm-card overflow-hidden">
-      <div class="smm-table-wrap">
-        <table class="smm-table">
-          <thead><tr><th>ID</th><th>Service / Category</th><th>Rate/1K</th><th>Limits</th><th>Provider</th><th>Status</th><th class="text-right">Actions</th></tr></thead>
-          <tbody>
-            <?php if (empty($services)): ?>
-              <tr><td colspan="7" class="text-center text-slate-500 py-8">No services found.</td></tr>
-            <?php else: foreach ($services as $s): ?>
-              <tr>
-                <td class="font-mono text-xs">#<?= (int)$s['id'] ?></td>
-                <td>
-                  <div class="font-semibold text-slate-900 text-xs sm:text-sm"><?= e($s['name']) ?></div>
-                  <div class="text-[11px] text-slate-400"><?= e($s['category_name']) ?></div>
-                </td>
-                <td class="font-bold text-violet-700 text-xs"><?= e(format_money($s['rate_per_1000'], 2)) ?></td>
-                <td class="text-xs text-slate-500"><?= (int)$s['min_qty'] ?>–<?= number_format((int)$s['max_qty']) ?></td>
-                <td class="text-xs text-slate-500"><?= e($s['provider_name'] ? $s['provider_name'] . ' #' . $s['provider_service_id'] : 'Manual') ?></td>
-                <td><span class="badge <?= e(status_badge_class((string)$s['status'])) ?>"><?= e($s['status']) ?></span></td>
-                <td class="text-right space-x-1 whitespace-nowrap">
-                  <a href="?edit=<?= (int)$s['id'] ?>" class="btn-secondary px-2.5 py-1 text-xs">Edit</a>
-                  <button type="button"
-                          onclick='SMM.confirmAction(<?= e(json_encode([
-                              "title" => "Delete Service",
-                              "message" => "Delete service \"" . $s["name"] . "\"? Services referenced by existing orders cannot be deleted.",
-                              "actionUrl" => app_url("/admin/services.php"),
-                              "fields" => ["action" => "delete", "id" => (int)$s["id"]],
-                              "confirmLabel" => "Delete"
-                          ])) ?>)'
-                          class="btn-secondary px-2.5 py-1 text-xs text-red-700">Delete</button>
-                </td>
-              </tr>
-            <?php endforeach; endif; ?>
-          </tbody>
-        </table>
+    <form method="POST" x-data="{ bulkAction: 'activate' }"
+          @submit="if (bulkAction === 'delete' && !confirm('Delete selected services? Services with existing orders will be archived instead of deleted.')) { $event.preventDefault(); }">
+      <?= CSRF::field() ?>
+      <input type="hidden" name="action" value="bulk">
+
+      <div class="smm-card p-4 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+          <div class="sm:col-span-2">
+            <label class="smm-label">Bulk Action</label>
+            <select name="bulk_action" x-model="bulkAction" class="smm-input">
+              <option value="activate">Activate Selected</option>
+              <option value="deactivate">Deactivate Selected</option>
+              <option value="delete">Delete Selected (safe)</option>
+              <option value="set_category">Move to Category</option>
+              <option value="set_rate">Set Rate / 1K</option>
+              <option value="increase_percent">Increase Price by %</option>
+              <option value="decrease_percent">Decrease Price by %</option>
+              <option value="increase_fixed">Increase Price by Fixed</option>
+              <option value="decrease_fixed">Decrease Price by Fixed</option>
+              <option value="set_markup">Apply Provider Margin</option>
+            </select>
+          </div>
+          <div x-show="bulkAction === 'set_category'" x-cloak>
+            <label class="smm-label">Category</label>
+            <select name="category_id" class="smm-input">
+              <?php foreach ($categories as $c): ?>
+                <option value="<?= (int)$c['id'] ?>"><?= e($c['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div x-show="['set_rate','increase_percent','decrease_percent','increase_fixed','decrease_fixed'].includes(bulkAction)" x-cloak>
+            <label class="smm-label">Amount / Percent</label>
+            <input type="number" step="0.0001" min="0.0001" name="amount_value" value="10" class="smm-input">
+          </div>
+          <div x-show="bulkAction === 'set_markup'" x-cloak class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="smm-label">Type</label>
+              <select name="markup_type" class="smm-input">
+                <option value="percent">Percent %</option>
+                <option value="fixed">Fixed +</option>
+              </select>
+            </div>
+            <div>
+              <label class="smm-label">Value</label>
+              <input type="number" step="0.0001" name="markup_value" value="25" class="smm-input">
+            </div>
+          </div>
+          <button type="submit" class="btn-primary px-4 py-2.5 text-sm">Apply to Selected</button>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">Check services below first. Archived services are hidden from the catalog but kept for historical order records.</p>
       </div>
-      <?php Theme::component('shared/pagination', ['pagination' => $pg, 'baseQuery' => ['q' => $q, 'category' => $catFilter], 'itemLabel' => 'services']); ?>
-    </div>
+
+      <div class="smm-card overflow-hidden">
+        <div class="smm-table-wrap">
+          <table class="smm-table">
+            <thead>
+              <tr>
+                <th class="w-8"><input type="checkbox" onclick="SMMAdmin.toggleCheckboxes(this, '.svc-chk')" aria-label="Select all services"></th>
+                <th>ID</th><th>Service / Category</th><th>Rate/1K</th><th>Limits</th><th>Provider</th><th>Status</th><th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (empty($services)): ?>
+                <tr><td colspan="8" class="text-center text-slate-500 py-8">No services found.</td></tr>
+              <?php else: foreach ($services as $s): ?>
+                <tr>
+                  <td><input type="checkbox" name="service_ids[]" value="<?= (int)$s['id'] ?>" class="svc-chk" aria-label="Select service <?= (int)$s['id'] ?>"></td>
+                  <td class="font-mono text-xs">#<?= (int)$s['id'] ?></td>
+                  <td>
+                    <div class="font-semibold text-slate-900 text-xs sm:text-sm"><?= e($s['name']) ?></div>
+                    <div class="text-[11px] text-slate-400"><?= e($s['category_name']) ?></div>
+                  </td>
+                  <td class="font-bold text-violet-700 text-xs"><?= e(format_money($s['rate_per_1000'], 2)) ?></td>
+                  <td class="text-xs text-slate-500"><?= (int)$s['min_qty'] ?>–<?= number_format((int)$s['max_qty']) ?></td>
+                  <td class="text-xs text-slate-500"><?= e($s['provider_name'] ? $s['provider_name'] . ' #' . $s['provider_service_id'] : 'Manual') ?></td>
+                  <td>
+                    <span class="badge <?= e(status_badge_class((string)$s['status'])) ?>"><?= e($s['status']) ?></span>
+                    <?php if (!empty($s['archived_at'])): ?><span class="badge badge-neutral">archived</span><?php endif; ?>
+                  </td>
+                  <td class="text-right space-x-1 whitespace-nowrap">
+                    <a href="?edit=<?= (int)$s['id'] ?>" class="btn-secondary px-2.5 py-1 text-xs">Edit</a>
+                    <button type="button"
+                            onclick='SMM.confirmAction(<?= e(json_encode([
+                                "title" => "Delete Service",
+                                "message" => "Delete service \"" . $s["name"] . "\"? Services referenced by existing orders will be archived instead.",
+                                "actionUrl" => app_url("/admin/services.php"),
+                                "fields" => ["action" => "delete", "id" => (int)$s["id"]],
+                                "confirmLabel" => "Delete"
+                            ])) ?>)'
+                            class="btn-secondary px-2.5 py-1 text-xs text-red-700">Delete</button>
+                  </td>
+                </tr>
+              <?php endforeach; endif; ?>
+            </tbody>
+          </table>
+        </div>
+        <?php Theme::component('shared/pagination', ['pagination' => $pg, 'baseQuery' => ['q' => $q, 'category' => $catFilter, 'archived' => $showArchived ? 1 : 0], 'itemLabel' => 'services']); ?>
+      </div>
+    </form>
   </div>
 </div>
