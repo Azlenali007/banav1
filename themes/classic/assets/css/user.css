@@ -1,0 +1,9 @@
+/* ApexSMM Classic Theme — User Panel Styles */
+.user-kpi-gradient {
+  background: linear-gradient(135deg, var(--smm-primary), var(--smm-primary-dark));
+  color: #FFFFFF;
+}
+
+.user-bottom-nav {
+  padding-bottom: max(0.375rem, env(safe-area-inset-bottom));
+}
