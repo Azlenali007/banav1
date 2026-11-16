@@ -1,0 +1,60 @@
+{
+  "systemSetup": [
+    {
+      "name": "Install PHP Runtime",
+      "command": "[ -x \"$HOME/.local/php/php\" ] || (mkdir -p \"$HOME/.local/php\" && curl -fsSL https://dl.static-php.dev/static-php-cli/common/php-8.3.14-cli-linux-x86_64.tar.gz -o /tmp/php.tar.gz && tar -xzf /tmp/php.tar.gz -C \"$HOME/.local/php\" && chmod +x \"$HOME/.local/php/php\")"
+    },
+    {
+      "name": "Install MariaDB Server",
+      "command": "[ -x \"$HOME/.local/mariadb/bin/mariadbd\" ] || (mkdir -p \"$HOME/.local\" && curl -fsSL https://archive.mariadb.org/mariadb-11.4.4/bintar-linux-systemd-x86_64/mariadb-11.4.4-linux-systemd-x86_64.tar.gz -o /tmp/mariadb.tar.gz && tar -xzf /tmp/mariadb.tar.gz -C /tmp && rm -rf \"$HOME/.local/mariadb\" && mv /tmp/mariadb-11.4.4-linux-systemd-x86_64 \"$HOME/.local/mariadb\")"
+    },
+    {
+      "name": "Initialize MariaDB Data",
+      "command": "[ -d \"$HOME/.local/mariadb-data/mysql\" ] || (mkdir -p \"$HOME/.local/mariadb-data\" \"$HOME/.local/mariadb-run\" && \"$HOME/.local/mariadb/scripts/mariadb-install-db\" --basedir=\"$HOME/.local/mariadb\" --datadir=\"$HOME/.local/mariadb-data\" --auth-root-authentication-method=normal)"
+    }
+  ],
+  "templateName": "custom",
+  "projectDependencies": [
+    {
+      "name": "Create Environment File",
+      "command": "[ -f .env ] || touch .env"
+    },
+    {
+      "name": "Initialize Database",
+      "command": "mkdir -p storage/logs storage/backups storage/cache storage/uploads storage/temp && chmod -R u+w storage config && (\"$HOME/.local/mariadb/bin/mariadb-admin\" --socket=\"$HOME/.local/mariadb-run/mysqld.sock\" ping >/dev/null 2>&1 || (nohup \"$HOME/.local/mariadb/bin/mariadbd\" --basedir=\"$HOME/.local/mariadb\" --datadir=\"$HOME/.local/mariadb-data\" --port=3306 --bind-address=127.0.0.1 --socket=\"$HOME/.local/mariadb-run/mysqld.sock\" --pid-file=\"$HOME/.local/mariadb-run/mysqld.pid\" >\"$HOME/.local/mariadb-run/mariadbd.log\" 2>&1 &)); sleep 3; \"$HOME/.local/php/php\" .ideavo/bootstrap.php"
+    }
+  ],
+  "codeChecks": [
+    {
+      "name": "Check PHP Syntax",
+      "command": "find . -path ./.ideavo -prune -o -name '*.php' -print0 | xargs -0 -n1 -P4 \"$HOME/.local/php/php\" -l"
+    }
+  ],
+  "buildSteps": [],
+  "runStep": [
+    {
+      "name": "Run Dev Server",
+      "command": "bash -c 'if ! \"$HOME/.local/mariadb/bin/mariadb-admin\" --socket=\"$HOME/.local/mariadb-run/mysqld.sock\" ping >/dev/null 2>&1; then nohup \"$HOME/.local/mariadb/bin/mariadbd\" --basedir=\"$HOME/.local/mariadb\" --datadir=\"$HOME/.local/mariadb-data\" --port=3306 --bind-address=127.0.0.1 --socket=\"$HOME/.local/mariadb-run/mysqld.sock\" --pid-file=\"$HOME/.local/mariadb-run/mysqld.pid\" >\"$HOME/.local/mariadb-run/mariadbd.log\" 2>&1 & sleep 3; fi; exec \"$HOME/.local/php/php\" -S 0.0.0.0:4000 -t .'",
+      "port": "4000"
+    }
+  ],
+  "deploySteps": [],
+  "cleanupFiles": [
+    "node_modules/",
+    "package-lock.json",
+    "storage/logs/*.log",
+    "storage/cache/*",
+    "storage/temp/*",
+    "storage/backups/*",
+    "storage/uploads/*",
+    ".DS_Store",
+    "*.log"
+  ],
+  "packageManager": "none",
+  "envPaths": [
+    {
+      "name": "default",
+      "path": ".env"
+    }
+  ]
+}
